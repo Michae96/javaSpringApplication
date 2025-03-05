@@ -1,0 +1,87 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.4.3'
+    id 'io.spring.dependency-management' version '1.1.7'
+    id 'com.vaadin' version '24.6.5'
+}
+
+group = 'org.example'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    set('vaadinVersion', "24.6.5")
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-data-rest'
+    implementation 'org.springframework.boot:spring-boot-starter-graphql'
+    implementation 'org.springframework.boot:spring-boot-starter-hateoas'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation 'org.springframework.boot:spring-boot-starter-jersey'
+    implementation 'org.springframework.boot:spring-boot-starter-jooq'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-authorization-server'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-web-services'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    implementation 'com.vaadin:vaadin-spring-boot-starter'
+    implementation 'org.flywaydb:flyway-core'
+    implementation 'org.flywaydb:flyway-database-db2'
+    implementation 'org.flywaydb:flyway-database-derby'
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+    implementation 'org.flywaydb:flyway-database-hsqldb'
+    implementation 'org.flywaydb:flyway-database-postgresql'
+    implementation 'org.liquibase:liquibase-core'
+    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.4'
+    implementation 'org.springframework.data:spring-data-rest-hal-explorer'
+//    implementation 'org.springframework.session:spring-session-jdbc'
+    compileOnly 'org.projectlombok:lombok'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    runtimeOnly 'com.h2database:h2'
+    runtimeOnly 'com.ibm.db2:jcc'
+    runtimeOnly 'io.r2dbc:r2dbc-h2'
+    runtimeOnly 'org.apache.derby:derby'
+    runtimeOnly 'org.apache.derby:derbytools'
+    runtimeOnly 'org.hsqldb:hsqldb'
+    runtimeOnly 'org.postgresql:postgresql'
+    runtimeOnly 'org.postgresql:r2dbc-postgresql'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'io.projectreactor:reactor-test'
+    testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.4'
+    testImplementation 'org.springframework.graphql:spring-graphql-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "com.vaadin:vaadin-bom:${vaadinVersion}"
+    }
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
