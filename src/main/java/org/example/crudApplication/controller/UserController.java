@@ -4,12 +4,13 @@ import org.example.crudApplication.dto.UserDto;
 import org.example.crudApplication.dto.UserMapper;
 import org.example.crudApplication.models.User;
 import org.example.crudApplication.repository.UserRepository;
+import org.example.crudApplication.config.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import org.example.crudApplication.config.JwtUtil;
-import java.util.Collections;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,12 +25,16 @@ public class UserController {
     @Autowired
     private JwtUtil jwtUtil;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody UserDto userDto) {
         if (userRepository.findByUsername(userDto.getUsername()).isPresent()) {
             return ResponseEntity.badRequest().body("Username already exists");
         }
         User user = UserMapper.toEntity(userDto);
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         User savedUser = userRepository.save(user);
         return ResponseEntity.ok(UserMapper.toDto(savedUser));
     }
@@ -39,14 +44,13 @@ public class UserController {
         Optional<User> userOpt = userRepository.findByUsername(loginRequest.getUsername());
         if (userOpt.isPresent()) {
             User user = userOpt.get();
-            if (user.getPassword().equals(loginRequest.getPassword())) {
+            if (passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
                 String token = jwtUtil.generateToken(user.getUsername());
                 return ResponseEntity.ok(Collections.singletonMap("token", token));
             }
         }
         return ResponseEntity.status(401).body("Invalid credentials");
     }
-
 
     @GetMapping
     public List<UserDto> getAllUsers() {

@@ -11,7 +11,7 @@ import javax.crypto.SecretKey;
 @Component
 public class JwtUtil {
     private static final SecretKey SECRET_KEY =
-            Keys.hmacShaKeyFor("bakytzhan".getBytes());
+            Keys.hmacShaKeyFor("bakytzhanbakytzhanbakytzhanbakytzhan".getBytes());
 
     public String generateToken(String username) {
         return Jwts.builder()
